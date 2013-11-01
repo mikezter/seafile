@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# coding: UTF-8
+# -*- coding: utf-8 -*-
 
 '''This scirpt builds the seafile debian source tarball. In this tarball,
 libsearpc and ccnet is also included.
