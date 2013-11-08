@@ -243,7 +243,14 @@ def check_seahub_thirdpart(thirdpartdir):
     we can copy it to seahub/thirdpart
 
     '''
-    thirdpart_libs = ['Django', 'Djblets', 'gunicorn', 'flup', 'chardet']
+    thirdpart_libs = [
+        'Django',
+        'Djblets',
+        'gunicorn',
+        'flup',
+        'chardet',
+        'SQLAlchemy',
+    ]
     def check_thirdpart_lib(name):
         name += '*/'
         if not glob.glob(os.path.join(thirdpartdir, name)):
@@ -254,6 +261,11 @@ def check_seahub_thirdpart(thirdpartdir):
 
 def check_targz_src(proj, version, srcdir):
     src_tarball = os.path.join(srcdir, '%s-%s.tar.gz' % (proj, version))
+    if not os.path.exists(src_tarball):
+        error('%s not exists' % src_tarball)
+
+def check_targz_src_no_version(proj, srcdir):
+    src_tarball = os.path.join(srcdir, '%s.tar.gz' % proj)
     if not os.path.exists(src_tarball):
         error('%s not exists' % src_tarball)
 
@@ -297,6 +309,8 @@ def validate_args(usage, options):
     check_targz_src('ccnet', ccnet_version, srcdir)
     check_targz_src('seafile', seafile_version, srcdir)
     check_targz_src('seahub', seafile_version, srcdir)
+
+    check_targz_src_no_version('seafevents', srcdir)
 
     # [ builddir ]
     builddir = get_option(CONF_BUILDDIR)
@@ -533,8 +547,24 @@ def copy_scripts_and_libs():
     seahub_thirdpart = os.path.join(dst_seahubdir, 'thirdpart')
     copy_seahub_thirdpart_libs(seahub_thirdpart)
 
+    uncompress_seafevents()
+
     # copy shared c libs
     copy_shared_libs()
+
+def uncompress_seafevents():
+    '''Extract seafevents.tar.gz to seafiles-server-2.0.0/seahub/
+
+    '''
+    builddir = conf[CONF_BUILDDIR]
+    seahub_dir = os.path.join(builddir, 'seafile-server', 'seahub')
+
+    tarball = os.path.join(conf[CONF_SRCDIR], 'seafevents.tar.gz')
+    if run('tar xf %s -C %s' % (tarball, seahub_dir)) != 0:
+        error('failed to uncompress %s' % tarball)
+
+    libevent_dir = os.path.join(seahub_dir, 'seafevents', 'libevent')
+    shutil.move(libevent_dir, seahub_dir)
 
 def get_dependent_libs(executable):
     syslibs = ['libsearpc', 'libccnet', 'libseafile', 'libpthread.so', 'libc.so', 'libm.so', 'librt.so', 'libdl.so', 'libselinux.so', 'libresolv.so' ]

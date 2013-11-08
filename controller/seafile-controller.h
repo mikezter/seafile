@@ -9,6 +9,7 @@
  *       - seaf-server
  *       - seaf-mon
  *       - httpserver
+ *       - seafevents
  *
  *    2. Repair:
  *
@@ -27,6 +28,7 @@ enum {
     PID_CCNET = 0,
     PID_SERVER,
     PID_HTTPSERVER,
+    PID_SEAFEVENTS,
     N_PID
 };
 
