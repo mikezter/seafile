@@ -102,11 +102,11 @@ else:
 SEAFILE_CONF_DIR = os.path.normpath(os.path.expanduser(SEAFILE_CONF_DIR))
 config.read(os.path.join(SEAFILE_CONF_DIR, 'seafile.conf'))
 
-MAX_UPLOAD_FILE_SIZE = 100 * (2 ** 20) # Default max upload size, set in httpserver.c
+MAX_UPLOAD_FILE_SIZE = None # Defaults to no limit
 if config.has_option('httpserver', 'max_upload_size'):
     try:
         max_upload_size_mb = config.getint('httpserver', 'max_upload_size')
-        if max_upload_size_mb > 0:
+        if max_upload_size_mb >= 0:
             MAX_UPLOAD_FILE_SIZE = max_upload_size_mb * (2 ** 20)
     except ValueError:
         pass
