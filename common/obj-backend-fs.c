@@ -216,9 +216,19 @@ save_obj_contents (const char *path, const void *data, int len, gboolean need_sy
             return -1;
     } else {
         if (g_rename (tmp_path, path) < 0) {
+#ifdef WIN32
+            /* On Windows, rename may fail if the dest exists. */
+            g_unlink (path);
+            if (g_rename (tmp_path, path) < 0) {
+                seaf_warning ("[obj backend] Failed to rename %s: %s.\n",
+                              path, strerror(errno));
+                return -1;
+            }
+#else
             seaf_warning ("[obj backend] Failed to rename %s: %s.\n",
                           path, strerror(errno));
             return -1;
+#endif
         }
     }
 
