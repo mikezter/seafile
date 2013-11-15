@@ -606,7 +606,7 @@ seaf_repo_index_worktree_files (const char *repo_id,
     it = cache_tree ();
     if (cache_tree_update (it, istate.cache, istate.cache_nr,
                            0, 0, commit_trees_cb) < 0) {
-        g_warning ("Failed to build cache tree");
+        g_warning ("Failed to build cache tree.\n");
         goto error;
     }
 

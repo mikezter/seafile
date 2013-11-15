@@ -177,17 +177,13 @@ static int verify_cache(struct cache_entry **cache,
         struct cache_entry *ce = cache[i];
         if (ce_stage(ce) || (ce->ce_flags & CE_INTENT_TO_ADD)) {
             if (10 < ++funny) {
-                /*fprintf(stderr, "...\n");*/
                 break;
             }
-#if 0   
             if (ce_stage(ce))
-                fprintf(stderr, "%s: unmerged (%s)\n",
-                        ce->name, sha1_to_hex(ce->sha1));
+                g_warning ("%s: unmerged, stage %d\n",
+                           ce->name, ce_stage(ce));
             else
-                fprintf(stderr, "%s: not added yet\n",
-                        ce->name);
-#endif
+                g_warning ("%s: not added yet\n", ce->name);
         }
     }
     if (funny)
@@ -210,7 +206,6 @@ static int verify_cache(struct cache_entry **cache,
             strncmp(this_name, next_name, this_len) == 0 &&
             next_name[this_len] == '/') {
             if (10 < ++funny) {
-                fprintf(stderr, "...\n");
                 break;
             }
             g_warning("You have both %s and %s\n",
