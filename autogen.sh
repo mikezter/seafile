@@ -5,13 +5,15 @@
 : ${AUTOHEADER=autoheader}
 : ${AUTOMAKE=automake}
 : ${ACLOCAL=aclocal}
-if test "${TERM_PROGRAM}" != "Apple_Terminal" ; then
-    : ${LIBTOOLIZE=libtoolize}
-else
-    : ${LIBTOOLIZE=glibtoolize}
-fi
 : ${INTLTOOLIZE=intltoolize}
-: ${LIBTOOL=libtool}
+
+if [[ "$(uname)" == "Darwin" ]]; then
+  : ${LIBTOOL=glibtool}
+  : ${LIBTOOLIZE=glibtoolize}
+else
+  : ${LIBTOOL=libtool}
+  : ${LIBTOOLIZE=libtoolize}
+fi
 
 srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
@@ -75,7 +77,7 @@ if grep "^AM_[A-Z0-9_]\{1,\}_GETTEXT" "$CONFIGURE" >/dev/null; then
       GETTEXTIZE="gettextize"
       GETTEXTIZE_URL="ftp://alpha.gnu.org/gnu/gettext-0.10.35.tar.gz"
     fi
-                                                                                                          
+
     $GETTEXTIZE --version < /dev/null > /dev/null 2>&1
     if test $? -ne 0; then
       echo
