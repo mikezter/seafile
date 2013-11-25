@@ -18,15 +18,17 @@ These packages are required:
       uuid-dev \
       libevent-dev \
       libsqlite3-dev \
-      libssl-dev \
-      valac \
-      flex
+      libssl-dev
 
 These packages are dependencies of the GUI client:
 
     sudo apt-get install \
       libgtk+2.0-dev \
       libnotify-dev
+
+This package is a dependency of Libzdb:
+
+    sudo apt-get install flex
 
 Vendored dependencies
 ---
@@ -37,9 +39,10 @@ Install Jansson:
       autoreconf -i &&\
       ./configure && make && sudo make install
 
-Install SeaRPC:
+Install Libsearpc:
 
     git clone git@github.com:haiwen/libsearpc.git && cd libsearpc &&\
+      automake --add-missing --copy &&\
       ./autogen.sh && ./configure && make && sudo make install
 
 Install Libzdb:
